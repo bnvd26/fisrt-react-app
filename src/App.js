@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Membre from './components/Membre'
+import Button from './components/Button'
 
 const famille = {
   membre1: {
@@ -18,9 +19,8 @@ const famille = {
   },
   membre4: {
     nom : 'Travis',
-    age: 10
+    age: 9
   },
-
 }
 
 class App extends Component {
@@ -29,9 +29,9 @@ class App extends Component {
     famille
   }
 
-  handleClick = () => {
+  handleClick = (num) => {
     const famille = { ...this.state.famille }
-    famille.membre1.age += 1
+    famille.membre1.age += num
     this.setState({ famille })
   }
 
@@ -40,6 +40,7 @@ class App extends Component {
     const { famille } = this.state
     return (
       <div className="App">
+        <input type="text"/>
         <h1>{title}</h1>
         <Membre 
           age={famille.membre1.age}
@@ -55,11 +56,9 @@ class App extends Component {
         <Membre 
           age={famille.membre4.age}
           name={famille.membre4.nom} />
-      <button 
-        onClick={this.handleClick}
-      >
-        Click  
-      </button>
+          <Button 
+            vieillir={ () => this.handleClick(2) }
+          />
       </div>
     )
   }
