@@ -20,13 +20,14 @@ const famille = {
   membre4: {
     nom : 'Travis',
     age: 9
-  },
+  }
 }
 
 class App extends Component {
 
   state = {
-    famille
+    famille,
+    isDescriptionShow: false
   }
 
   handleClick = (num) => {
@@ -35,25 +36,73 @@ class App extends Component {
     this.setState({ famille })
   }
 
+  handleChange = (event, id) => {
+    const famille = { ...this.state.famille }
+    const nom = event.target.value
+    famille[id].nom = nom
+    this.setState({famille})
+  }
+
+  handleShowDescription = () => {
+    const isDescriptionShow = !this.state.isDescriptionShow
+    this.setState({isDescriptionShow})
+  }
+
+  hideName = id => {
+    const famille = { ...this.state.famille }
+    famille[id].nom = 'X'
+    this.setState({ famille })
+  }
+
   render(){
     const { title } = this.props
-    const { famille } = this.state
+    const { famille, isDescriptionShow } = this.state
+
+    let description = null
+    if(isDescriptionShow) {
+      description = <p>Il y a une props children</p>
+    }
+
+    const liste = Object.keys(famille) // creer un tableau a partir des cles de l'objet ici famille par exemple
+        .map(membre => (                // map permet de boucler autour du tableau
+          <Membre
+            handleChange={event => this.handleChange(event, membre)}
+            hideName={() => { this.hideName(membre)}}
+            key={membre}
+            age={famille[membre].age}
+            name={famille[membre].nom} />
+        ))
+
     return (
       <div className="App">
         <input type="text"/>
         <h1>{title}</h1>
+        {liste}
         <Membre 
           age={famille.membre1.age}
-          name={famille.membre1.nom} />
+          name={famille.membre1.nom} >
+            { description }
+          </Membre>
         <Membre 
           age={famille.membre2.age}
           name={famille.membre2.nom} />
         <Membre 
           age={famille.membre3.age}
           name={famille.membre3.nom}>
-          <strong>Je suis un rappeur US</strong>
-        </Membre>
-        <Membre 
+            {
+            isDescriptionShow ?
+            <strong>Je suis un rappeur US</strong>
+            :
+            null
+            }
+          <button onClick={this.handleShowDescription}>
+            {
+              isDescriptionShow ?
+              'Hide' : 'Show' 
+            }
+          </button>
+          </Membre>
+          <Membre 
           age={famille.membre4.age}
           name={famille.membre4.nom} />
           <Button 
